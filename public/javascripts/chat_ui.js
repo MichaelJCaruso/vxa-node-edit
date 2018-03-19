@@ -1,9 +1,9 @@
 function divEscapedContentElement(message) {
-  return $('<div></div>').text(message);
+    return $('<pre></pre>').text (message);
 }
 
 function divSystemContentElement(message) {
-  return $('<div></div>').html('<i>' + message + '</i>');
+  return $('<div></div>').html(message);
 }
 
 function processUserInput(chatApp, socket) {
@@ -46,7 +46,11 @@ $(document).ready(function() {
   });
 
   socket.on('message', function (message) {
-      var newElement = $('<div></div>').text(message.text);
+      //      var newElement = $('<div></div>').text(message.text);
+      var messageText = message.text;
+      var newElement = divSystemContentElement (messageText);
+//      else
+//          var newElement = divEscapedContentElement (messageText);
       console.log (newElement);
     $('#messages').append(newElement);
   });
