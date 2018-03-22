@@ -93,8 +93,14 @@ function returnVisionResult (res, str) {
     res.send (str). end ();
 }
 
+function JSContext (context, req, res) {
+    this.context = context;
+    this.request = req;
+    this.response = res;
+}
+
 function processVisionRequest (req, res, next) {
-    v (formatVisionExpression (req), {req, res}).then (
+    v (formatVisionExpression (req), new JSContext (this, req, res)).then (
         (str) => returnVisionResult (res, str),
         (str) => returnVisionResult (formatVisionRequest (req, str))
     );
