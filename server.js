@@ -1,8 +1,10 @@
 const express = require('express');
-const http = require('http');
 const fs  = require('fs');
-const path = require('path');
+const http = require('http');
 const mime = require('mime');
+const path = require('path');
+const querystring = require('querystring');
+const v = require('vxanode').v;
 const cache = {};
 
 function send404(response) {
@@ -44,34 +46,64 @@ function objToString (obj) {
     var str = '';
     for (var p in obj) {
         if (obj.hasOwnProperty(p)) {
-            str += p + '::' + obj[p] + '\n';
+            str += '<br>' + p;
         }
     }
     return str;
 }
 
-/*----------------*/
-var app = express ();
-app.use ('/cgi-bin/vquery.exe/default', function (req, res, next) {
+function quote (str) {
+    return '"' + str.replace ('/"/g', '\\"') + '"';
+}
+
+function formatVisionExpression (req) {
+    var vexpr = "'co' locateInDictionaryOf: Utility. else: [Utility define: \"co\" toBePrimitive: 7]; !reqres <- Utility co;"
+    vexpr += "Interface HtmlAccess get: " + quote (
+        req.params.app + ((extras)=>extras ? '@' + extras : '')(req.params.extras)
+    ) + " usingQuery: " + quote (
+        querystring.stringify (req.query)
+    ) + " for: " + quote (
+        req.hostname
+    ) + " at: " + quote (
+        req.ip
+    );
+    console.log (vexpr);
+    return vexpr;
+}
+
+function formatVisionRequest (req, message) {
     var result = '<!DOCTYPE html><html><body><h2>' + req.originalUrl + '</h2>';
 
-    result += ' path:\n'   + req.path + '<hr>';
-    result += ' query:\n'  + JSON.stringify (req.query) + '<hr>';
-    result += ' headers:\n'+ JSON.stringify (req.headers) + '<hr>';
+    if (message)
+        result += message + '<hr>';
 
-    result += ((obj)=> {
-        var str = '';
-        for (var p in obj) {
-            if (obj.hasOwnProperty(p)) {
-                str += '<br>' + p;
-            }
-        }
-        return str;
-    }) (req);
+    result += ' path:'   + req.path + '<hr>';
+    result += ' params:' + JSON.stringify (req.params)  + '<hr>';
+    result += ' query:'  + JSON.stringify (req.query)   + '<hr>';
+    result += ' headers:'+ JSON.stringify (req.headers) + '<hr>';
+    result += ' vision:' + formatVisionExpression (req) + '<hr>';
+
+    result += objToString (req);
 
     result += '</body></html>';
-    res.send(result).end ();
-});
+    return result;
+}
+
+function returnVisionResult (res, str) {
+    res.send (str). end ();
+}
+
+function processVisionRequest (req, res, next) {
+    v (formatVisionExpression (req), {req, res}).then (
+        (str) => returnVisionResult (res, str),
+        (str) => returnVisionResult (formatVisionRequest (req, str))
+    );
+}
+
+/*----------------*/
+var app = express ();
+app.use ('/cgi-bin/vquery.exe/:target/:app@:extras', processVisionRequest);
+app.use ('/cgi-bin/vquery.exe/:target/:app', processVisionRequest);
 app.use (express.static (path.join (__dirname, 'public')));
 
 exports.app = app;
