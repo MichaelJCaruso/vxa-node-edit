@@ -46,12 +46,10 @@ $(document).ready(function() {
   });
 
   socket.on('message', function (message) {
-      //      var newElement = $('<div></div>').text(message.text);
       var messageText = message.text;
-      var newElement = divSystemContentElement (messageText);
-//      else
-//          var newElement = divEscapedContentElement (messageText);
-      console.log (newElement);
+      var newElement = messageText.substring (0,1) === "<"
+          ? divSystemContentElement (messageText)
+          : divEscapedContentElement (messageText);
     $('#messages').append(newElement);
   });
 

@@ -1,8 +1,9 @@
-var http = require('http');
-var fs  = require('fs');
-var path = require('path');
-var mime = require('mime');
-var cache = {};
+const express = require('express');
+const http = require('http');
+const fs  = require('fs');
+const path = require('path');
+const mime = require('mime');
+const cache = {};
 
 function send404(response) {
   response.writeHead(404, {'Content-Type': 'text/plain'});
@@ -39,22 +40,50 @@ function serveStatic(response, cache, absPath) {
   }
 }
 
-var server = http.createServer(function(request, response) {
-  var filePath = false;
+function objToString (obj) {
+    var str = '';
+    for (var p in obj) {
+        if (obj.hasOwnProperty(p)) {
+            str += p + '::' + obj[p] + '\n';
+        }
+    }
+    return str;
+}
 
-  if (request.url == '/') {
-    filePath = 'public/index.html';
-  } else {
-    filePath = 'public' + request.url;
-  }
-
-  var absPath = './' + filePath;
-  serveStatic(response, cache, absPath);
+/*----------------*/
+var app = express ();
+app.use ('/cgi-bin/vquery.exe/default', function (req, res, next) {
+    var result = '<!DOCTYPE html><html><body><h2>' + req.originalUrl + '</h2>';
+    result += ((obj)=> {
+        var str = '';
+        for (var p in obj) {
+            if (obj.hasOwnProperty(p)) {
+                str += '<br>' + p;
+            }
+        }
+        return str;
+    }) (req);
+    result += '</body></html>';
+    res.send(result).end ();
 });
+app.use (express.static (path.join (__dirname, 'public')));
 
-server.listen(3000, function() {
+exports.app = app;
+
+/*----------------*/
+var httpServer = http.createServer (app);
+exports.httpServer = httpServer;
+
+/*----------------*/
+var chatServer = require('./lib/chat_server');
+chatServer.listen(httpServer);
+exports.chatServer = chatServer;
+
+/*----------------*/
+httpServer.listen(3000, function() {
   console.log("Server listening on port 3000.");
 });
 
-var chatServer = require('./lib/chat_server');
-chatServer.listen(server);
+/*
+FormatTools Html evaluate: [Interface ApplicationWS ShowClassSummary];
+*/
