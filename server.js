@@ -54,6 +54,11 @@ function objToString (obj) {
 var app = express ();
 app.use ('/cgi-bin/vquery.exe/default', function (req, res, next) {
     var result = '<!DOCTYPE html><html><body><h2>' + req.originalUrl + '</h2>';
+
+    result += ' path:\n'   + req.path + '<hr>';
+    result += ' query:\n'  + JSON.stringify (req.query) + '<hr>';
+    result += ' headers:\n'+ JSON.stringify (req.headers) + '<hr>';
+
     result += ((obj)=> {
         var str = '';
         for (var p in obj) {
@@ -63,6 +68,7 @@ app.use ('/cgi-bin/vquery.exe/default', function (req, res, next) {
         }
         return str;
     }) (req);
+
     result += '</body></html>';
     res.send(result).end ();
 });
