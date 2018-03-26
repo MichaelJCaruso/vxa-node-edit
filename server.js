@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyparser = require('body-parser');
 const fs  = require('fs');
 const http = require('http');
 const mime = require('mime');
@@ -56,10 +57,11 @@ function quote (str) {
     return '"' + str.replace ('/"/g', '\\"') + '"';
 }
 
-function formatVisionExpression (req) {
-    var vexpr = "'co' locateInDictionaryOf: Utility. else: [Utility define: \"co\" toBePrimitive: 7]; !reqres <- Utility co;"
-    vexpr += "Interface HtmlAccess get: " + quote (
-        req.params.app + ((extras)=>extras ? '@' + extras : '')(req.params.extras)
+function formatType1VisionRequest (req) {
+    return (
+        "'co' locateInDictionaryOf: Utility. else: [Utility define: \"co\" toBePrimitive: 7]; !reqres <- Utility co;"
+    ) + "Interface HtmlAccess get: " + quote (
+        (req.params.app || '')
     ) + " usingQuery: " + quote (
         querystring.stringify (req.query)
     ) + " for: " + quote (
@@ -67,11 +69,13 @@ function formatVisionExpression (req) {
     ) + " at: " + quote (
         req.ip
     );
-    console.log (vexpr);
-    return vexpr;
 }
 
-function formatVisionRequest (req, message) {
+function formatType2VisionRequest (req) {
+    return "AppBridgeTools executeWith: AppBridgeTools clientObject";
+}
+
+function formatVisionRequestAsHtml (req, message, requestBuilder) {
     var result = '<!DOCTYPE html><html><body><h2>' + req.originalUrl + '</h2>';
 
     if (message)
@@ -81,7 +85,7 @@ function formatVisionRequest (req, message) {
     result += ' params:' + JSON.stringify (req.params)  + '<hr>';
     result += ' query:'  + JSON.stringify (req.query)   + '<hr>';
     result += ' headers:'+ JSON.stringify (req.headers) + '<hr>';
-    result += ' vision:' + formatVisionExpression (req) + '<hr>';
+    result += ' vision:' + requestBuilder (req) + '<hr>';
 
     result += objToString (req);
 
@@ -89,39 +93,67 @@ function formatVisionRequest (req, message) {
     return result;
 }
 
-function returnVisionResult (res, str) {
-    res.send (str). end ();
-}
+function ClientObject (req, res, next) {
+    return {
+        Object   : global.Object,
+        request  : req,
+        response : res,
+        next,
+        getAppName : function () {
+            return this.getParam ("app");
+        },
+        getQueryString : function () {
+            return querystring.stringify (this.request.query);
+        },
+        getParam : function (property) {
+            return this.getProperty (this.request.params, property);
+        },
+        getQuery : function (property) {
+            return this.getProperty (this.request.query, property);
+        },
+        getProperty: function (object, property) {
+            return object.hasOwnProperty (property) ? object[property] : "";
+        },
 
-function JSContext (context, req, res) {
-    this.context = context;
-    this.request = req;
-    this.response = res;
+        returnResult: function (str) {
+            return this.response.send (str).end ();
+        },
+        returnError: function (str) {
+            return this.response.send (str).end ();
+        }
+    };
 }
 
 function processVisionRequest (req, res, next) {
-    v (formatVisionExpression (req), new JSContext (this, req, res)).then (
-        (str) => returnVisionResult (res, str),
-        (str) => returnVisionResult (formatVisionRequest (req, str))
+    const requestFormatter = formatType2VisionRequest;
+
+    const vx = requestFormatter (req);
+    const co = ClientObject (req, res, next);
+    v (vx, co).then (
+        str => {}, str => co.returnError (
+            formatVisionRequestAsHtml (req, str, requestFormatter)
+        )
     );
 }
 
 /*----------------*/
 var app = express ();
-app.use ('/cgi-bin/vquery.exe/:target/:app@:extras', processVisionRequest);
+//app.use (bodyparser.urlencoded ({extended: false}));
+//app.use ('/cgi-bin/vquery.exe/:target/:app@:extras', processVisionRequest);
 app.use ('/cgi-bin/vquery.exe/:target/:app', processVisionRequest);
+app.use ('/cgi-bin/vquery.exe/:target', processVisionRequest);
 app.use (express.static (path.join (__dirname, 'public')));
 
-exports.app = app;
+module.exports.app = app;
 
 /*----------------*/
 var httpServer = http.createServer (app);
-exports.httpServer = httpServer;
+module.exports.httpServer = httpServer;
 
 /*----------------*/
-var chatServer = require('./lib/chat_server');
-chatServer.listen(httpServer);
-exports.chatServer = chatServer;
+//var chatServer = require('./lib/chat_server');
+//chatServer.listen(httpServer);
+//module.exports.chatServer = chatServer;
 
 /*----------------*/
 httpServer.listen(3000, function() {
