@@ -95,7 +95,7 @@ function formatVisionRequestAsHtml (req, message, requestBuilder) {
 
 function ClientObject (req, res, next) {
     return {
-        Object   : global.Object,
+        global,
         request  : req,
         response : res,
         next,
