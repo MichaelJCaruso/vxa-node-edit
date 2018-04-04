@@ -27,6 +27,11 @@ $(document).ready(function() {
     $('#messages').scrollTop($('#messages').prop('scrollHeight'));
   });
 
+  socket.on('ping-pong', function (message) {
+  });
+
+//  setInterval (function() {socket.emit ('ping-pong');}, 750);
+
   $('#send-message').focus();
 
   $('#send-form').submit(function() {
