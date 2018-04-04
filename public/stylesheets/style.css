@@ -8,7 +8,8 @@ a {
 }
 
 #content {
-  
+  display: flex;
+  flex-direction: column;
   margin-left: auto;
   margin-right: auto;
 }
@@ -19,13 +20,9 @@ a {
 }
 
 #message-area {
-    overflow: hidden;
-    height: fill-available;
-    max-height: fill-available;
 }
 
 #messages {
-    overflow: auto;
   background-color: #eee;
   margin-bottom: 1em;
   margin-right: 10px;
