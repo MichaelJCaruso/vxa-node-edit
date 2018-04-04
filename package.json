@@ -5,7 +5,9 @@
   "dependencies": {
     "express": "^4.16.3",
     "mime": "~1.2.7",
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0",
     "socket.io": "~0.9.6",
-    "vxanode": "MichaelJCaruso/vxa-node"
+    "vxanode": "github:MichaelJCaruso/vxa-node"
   }
 }

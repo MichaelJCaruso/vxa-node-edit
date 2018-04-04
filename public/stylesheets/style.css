@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 1px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -8,7 +8,7 @@ a {
 }
 
 #content {
-  width: 800px;
+  
   margin-left: auto;
   margin-right: auto;
 }
@@ -18,34 +18,22 @@ a {
   margin-bottom: 1em;
 }
 
+#message-area {
+    overflow: hidden;
+    height: fill-available;
+    max-height: fill-available;
+}
+
 #messages {
-  width: 690px;
-  height: 300px;
-  overflow: auto;
+    overflow: auto;
   background-color: #eee;
   margin-bottom: 1em;
   margin-right: 10px;
 }
 
-#room-list {
-  float: right;
-  width: 100px;
-  height: 300px;
-  overflow: auto;
-}
-
-#room-list div {
-  border-bottom: 1px solid #eee;
-}
-
-#room-list div:hover {
-  background-color: #ddd;
-}
-
 #send-message {
-  width: 700px;
-  margin-bottom: 1em;
-  margin-right: 1em;
+    width: 90%;
+    height: 100%;
 }
 
 #help {

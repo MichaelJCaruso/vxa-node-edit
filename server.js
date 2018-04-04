@@ -151,9 +151,12 @@ var httpServer = http.createServer (app);
 module.exports.httpServer = httpServer;
 
 /*----------------*/
-//var chatServer = require('./lib/chat_server');
-//chatServer.listen(httpServer);
-//module.exports.chatServer = chatServer;
+module.exports.v = v;
+
+/*----------------*/
+var chatServer = require('./lib/chat_server');
+chatServer.listen(httpServer);
+module.exports.chatServer = chatServer;
 
 /*----------------*/
 httpServer.listen(3000, function() {
