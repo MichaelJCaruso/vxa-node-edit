@@ -20,12 +20,13 @@ a {
 }
 
 #message-area {
+    overflow: auto;
 }
 
 #messages {
-  background-color: #eee;
-  margin-bottom: 1em;
-  margin-right: 10px;
+    background-color: #eee;
+    margin-bottom: 1em;
+    margin-right: 10px;
 }
 
 #send-message {
