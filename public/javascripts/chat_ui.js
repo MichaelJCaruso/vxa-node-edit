@@ -1,22 +1,68 @@
-function divEscapedContentElement(message) {
-    return $('<pre></pre>').text (message);
+function onRequestHover (event) {
+    console.log ('request', event);
 }
 
-function divSystemContentElement(message) {
-  return $('<div></div>').html(message);
+function onResponseHover (event) {
+    console.log ('response', event);
 }
 
 function processUserInput(chatApp, doc, socket) {
-  var message = chatApp.editor.getValue ();
-  chatApp.sendMessage(message);
-  $('#messages').append(divEscapedContentElement(message));
+    var message = chatApp.editor.getValue ();
+    chatApp.sendMessage(message);
     chatApp.editor.setValue('');
 }
 
+function onTxnHover (event) {
+}
+
+/******************/
+function TxnElement (request,response) {
+    var element = $('<div"></div>').addClass ('txn');
+    if (request)
+        element.append (RequestText (request));
+    element.append (ResponseText (response));
+    return element;
+}
+
+function RequestText (request) {
+    return EscapedContentElement (request)
+        .addClass('request')
+        .hover(onRequestHover);
+}
+
+function ResponseText (response) {
+    return (
+        response.substring (0,1) === "<"
+	    ? SystemContentElement (response)
+	    : EscapedContentElement (response)
+    ).addClass ('response');
+}
+
+function EscapedContentElement(content) {
+    return $('<pre></pre>').text (content);
+}
+
+function SystemContentElement(content) {
+  return $('<div></div>').html(content);
+}
+
+function processRequest(chatApp) {
+  var request = $('#send-message').val();
+  $('#send-message').val('');
+
+  chatApp.sendMessage(request);
+}
+
+function processResponse(response) {
+    $('#messages').append (TxnElement (response.request,response.text));
+}
+
+/******************/
 function onTextAreaResize (area, handler) {
     area.on("mouseup", handler)
 };
 
+/******************/
 function updateMessageAreaHeight () {
     $('#message-area').height(
 	Math.max (
@@ -29,24 +75,17 @@ function updateMessageAreaHeight () {
     );
 }
 
-var socket = io.connect();
-
+/******************/
 $(document).ready(function() {
-    var chatApp = new Chat(
+    const socket = io.connect();
+
+    const chatApp = new Chat(
 	socket, CodeMirror.fromTextArea (
 	    $('#send-message')[0], { mode: "smalltalk" }
 	)
     );
-    socket.on(
-	'message', function (message) {
-	    var messageText = message.text;
-	    var newElement = messageText.substring (0,1) === "<"
-		? divSystemContentElement (messageText)
-		: divEscapedContentElement (messageText);
-	    $('#messages').append(newElement);
-//	    $('#messages').scrollTop($('#messages').prop('height'));
-	}
-    );
+
+    socket.on('message', processResponse);
     socket.on(
 	'showGraph', function (source) {
 	    console.log ("Got showGraph " + source);
@@ -67,7 +106,7 @@ $(document).ready(function() {
     }) ($('#send-message'));
 
     $('#send-form').submit(function() {
-	processUserInput(chatApp, socket);
+	processRequest(chatApp);
 	return false;
     });
 });

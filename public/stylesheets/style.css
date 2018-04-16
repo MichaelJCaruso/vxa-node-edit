@@ -7,6 +7,15 @@ a {
   color: #00B7FF;
 }
 
+.txn {
+}
+
+.request {
+}
+
+.response {
+}
+
 #content {
   display: flex;
   flex-direction: column;
