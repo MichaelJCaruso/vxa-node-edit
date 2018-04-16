@@ -23,11 +23,6 @@ a {
   margin-right: auto;
 }
 
-#room {
-  background-color: #ddd;
-  margin-bottom: 1em;
-}
-
 #message-area {
     overflow: auto;
 }
@@ -36,11 +31,6 @@ a {
     background-color: #eee;
     margin-bottom: 1em;
     margin-right: 10px;
-}
-
-#send-message {
-    width: 90%;
-    height: 100%;
 }
 
 #help {

@@ -6,12 +6,6 @@ function onResponseHover (event) {
     console.log ('response', event);
 }
 
-function processUserInput(chatApp, doc, socket) {
-    var message = chatApp.editor.getValue ();
-    chatApp.sendMessage(message);
-    chatApp.editor.setValue('');
-}
-
 function onTxnHover (event) {
 }
 
@@ -46,13 +40,6 @@ function SystemContentElement(content) {
   return $('<div></div>').html(content);
 }
 
-function processRequest(chatApp) {
-  var request = $('#send-message').val();
-  $('#send-message').val('');
-
-  chatApp.sendMessage(request);
-}
-
 function processResponse(response) {
     $('#messages').append (TxnElement (response.request,response.text));
 }
@@ -67,7 +54,7 @@ function updateMessageAreaHeight () {
     $('#message-area').height(
 	Math.max (
 	    $(window).height()
-		- $('#send-form-area').height()
+		- $('#input-area').height()
 		- $('#viz').height()
 		- 20,
 	    100
@@ -76,12 +63,23 @@ function updateMessageAreaHeight () {
 }
 
 /******************/
+var theApp;
+
 $(document).ready(function() {
+    if (theApp)
+        return;
+
     const socket = io.connect();
 
-    const chatApp = new Chat(
-	socket, CodeMirror.fromTextArea (
-	    $('#send-message')[0], { mode: "smalltalk" }
+    theApp = new Chat(
+	socket, CodeMirror(
+	    $('#input-area')[0], {
+                mode: "smalltalk",
+                lineNumbers: true,
+                extraKeys: {
+                    F2: cm=>theApp.processRequest()
+                }
+            }
 	)
     );
 
@@ -99,14 +97,4 @@ $(document).ready(function() {
 
     updateMessageAreaHeight ();
     $(window).resize (updateMessageAreaHeight);
-
-    (area => {
-	onTextAreaResize (area, updateMessageAreaHeight);
-	area.focus ();
-    }) ($('#send-message'));
-
-    $('#send-form').submit(function() {
-	processRequest(chatApp);
-	return false;
-    });
 });
