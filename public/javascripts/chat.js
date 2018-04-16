@@ -1,4 +1,5 @@
-var Chat = function(socket) {
+var Chat = function(socket, editor) {
+  this.editor = editor;
   this.socket = socket;
 };
 

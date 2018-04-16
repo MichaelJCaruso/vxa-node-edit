@@ -5,7 +5,7 @@ const path = require('path');
 /*----------------*/
 const app = express ();
 app.use (express.static (path.join (__dirname, 'public')));
-
+app.use ('/node_modules', express.static (path.join (__dirname, 'node_modules')));
 module.exports.app = app;
 
 /*----------------*/
@@ -25,7 +25,7 @@ chatServer.listen(httpServer);
 module.exports.chatServer = chatServer;
 
 /*----------------*/
-httpServer.listen(3000, function() {
+httpServer.listen(process.env.PORT || 3000, function() {
   console.log("Server listening on port 3000.");
 });
 

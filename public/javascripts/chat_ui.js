@@ -6,11 +6,11 @@ function divSystemContentElement(message) {
   return $('<div></div>').html(message);
 }
 
-function processUserInput(chatApp, socket) {
-  var message = $('#send-message').val();
+function processUserInput(chatApp, doc, socket) {
+  var message = chatApp.editor.getValue ();
   chatApp.sendMessage(message);
   $('#messages').append(divEscapedContentElement(message));
-  $('#send-message').val('');
+    chatApp.editor.setValue('');
 }
 
 function onTextAreaResize (area, handler) {
@@ -32,8 +32,11 @@ function updateMessageAreaHeight () {
 var socket = io.connect();
 
 $(document).ready(function() {
-    var chatApp = new Chat(socket);
-
+    var chatApp = new Chat(
+	socket, CodeMirror.fromTextArea (
+	    $('#send-message')[0], { mode: "smalltalk" }
+	)
+    );
     socket.on(
 	'message', function (message) {
 	    var messageText = message.text;
