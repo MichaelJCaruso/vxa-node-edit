@@ -1,10 +1,14 @@
 body {
-  padding: 1px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding: 1px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
-  color: #00B7FF;
+    color: #00B7FF;
 }
 
 .txn {
@@ -16,7 +20,17 @@ a {
 .response {
 }
 
-/* CodeMirror  */
+/*----------------*/
+/*     Sizing     */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+/*----------------*/
+/*   CodeMirror   */
 .CodeMirror {
     position: absolute;
     top: 0;
@@ -25,91 +39,91 @@ a {
     width: 100%;
 }
 
+/*----------------*/
+/*    Splitters   */
+
 /* horizontal panel*/
+.splittable-row {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid silver;
+    overflow: hidden;
 
-.panel-container-horizontal {
-  display: flex;
-  flex-direction: row;
-  border: 1px solid silver;
-  overflow: hidden;
-
-  /* avoid browser level touch actions */
-  xtouch-action: none;
+    /* avoid browser level touch actions */
+    xtouch-action: none;
 }
 
-.panel-left {
-  flex: 0 0 auto;
-  /* only manually resize */
-  padding: 10px;
-  width: 300px;
-  min-height: 200px;
-  min-width: 150px;
-  white-space: nowrap;
-  /* background: #838383; */
-  /* color: white; */
+.splittable-row-left {
+    flex: 0 0 auto;
+    /* only manually resize */
+    padding: 10px;
+    width: 300px;
+    min-height: 200px;
+    min-width: 150px;
+    white-space: nowrap;
+    /* background: #838383; */
+    /* color: white; */
 }
 
-.splitter-left-right {
-  flex: 0 0 auto;
-  width: 18px;
-  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png) center center no-repeat #535353;
-  min-height: 200px;
-  cursor: col-resize;
+.splittable-row-right {
+    flex: 1 1 auto;
+    /* resizable */
+    padding: 10px;
+    width: 100%;
+    min-height: 200px;
+    min-width: 200px;
+    background: #eee;
 }
 
-.panel-right {
-  flex: 1 1 auto;
-  /* resizable */
-  padding: 10px;
-  width: 100%;
-  min-height: 200px;
-  min-width: 200px;
-  background: #eee;
+.splittable-row-splitter {
+    flex: 0 0 auto;
+    width: 18px;
+    background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png) center center no-repeat #535353;
+    min-height: 200px;
+    cursor: col-resize;
 }
-
 
 /* vertical panel */
-
-.panel-container-vertical {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid silver;
-}
-
-.panel-top {
-  flex: 0 0 auto;
-  /* only manually resize */
-  padding: 10px;
-  width: 100%;
-  white-space: nowrap;
-  /*  background: #838383; */
-}
-
-.splitter-top-bottom {
-  flex: 0 0 auto;
-  height: 18px;
-  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/hsizegrip.png) center center no-repeat #535353;
-  cursor: row-resize;
-}
-
-.panel-bottom {
-    flex: 1 1 auto;
-    position: relative;
-  /* resizable */
-/*  padding: 10px; */
-    min-height: 10px;
+.splittable-column {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid silver;
     height: 100%;
     width: 100%;
-  background: #eee;
 }
 
+.splittable-column-top {
+    flex: 0 0 auto;
+    /* only manually resize */
+    /* padding: 10px; */
+    height: 50%;
+    width: 100%;
+    white-space: nowrap;
+    /*  background: #838383; */
+}
+
+.splittable-column-bottom {
+    flex: 1 1 auto;
+    position: relative;
+    /* resizable */
+    /*  padding: 10px; */
+    min-height: 10px;
+    height: 50%;
+    width: 100%;
+    background: #eee;
+}
+
+.splittable-column-splitter {
+    flex: 0 0 auto;
+    height: 18px;
+    background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/hsizegrip.png) center center no-repeat #535353;
+    cursor: row-resize;
+}
+/*----------------*/
+
 #content {
-/*
-  display: flex;
-  flex-direction: column;
-*/
-  margin-left: auto;
-  margin-right: auto;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 #message-area {

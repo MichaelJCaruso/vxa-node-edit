@@ -50,16 +50,18 @@
 </head>
 
 <body>
-  <div id="viz">
+  <div id="viz" style="display:none">
     <svg id="viz-svg" style="width:100%;height:300px;" ></svg>
   </div>
-  <div id='content' class='panel-container-vertical'>
-    <div id='message-area' class='panel-top'>
+  <div id='content' class='splittable-column'>
+    <div id='message-area' class='splittable-column-top'>
       <div id='messages'></div>
     </div>
-    <div id='content-splitter' class='splitter-top-bottom'></div>
-    <div id='input-area' class='panel-bottom'>
+    <div id='content-splitter' class='splittable-column-splitter'></div>
+    <div id='input-area' class='splittable-column-bottom'>
+<!--
       <textarea id='editor' style="display:none;"></textarea>
+-->
     </div>
   </div>
 </body>
