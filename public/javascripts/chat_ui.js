@@ -45,19 +45,19 @@ function processResponse(response) {
 }
 
 /******************/
-function onTextAreaResize (area, handler) {
-    area.on("mouseup", handler)
-};
-
-/******************/
-function updateMessageAreaHeight () {
-    $('#message-area').height(
+function updateInputAreaHeight (theApp) {
+    (h=> {
+        console.log ("input height = ", h);
+        $('#input-area').height(h);
+        theApp.editor.setSize (null,h);
+    })(
 	Math.max (
 	    $(window).height()
-		- $('#input-area').height()
+		- $('#message-area').height()
+                - $('#content-splitter').height ()
 		- $('#viz').height()
-		- 20,
-	    100
+		- 50,
+	    10
 	)
     );
 }
@@ -72,12 +72,15 @@ $(document).ready(function() {
     const socket = io.connect();
 
     theApp = new Chat(
-	socket, CodeMirror(
-	    $('#input-area')[0], {
+	socket, CodeMirror.fromTextArea (
+            $("#editor")[0], {
+//	    $('#input-area')[0], {
                 mode: "smalltalk",
                 lineNumbers: true,
+                keyMap: "emacs",
                 extraKeys: {
-                    F2: cm=>theApp.processRequest()
+                    F2: cm=>theApp.processRequest(),
+                    "Alt-S": "findPersistentNext"
                 }
             }
 	)
@@ -95,6 +98,15 @@ $(document).ready(function() {
 
 //  setInterval (function() {socket.emit ('ping-pong');}, 750);
 
-    updateMessageAreaHeight ();
-    $(window).resize (updateMessageAreaHeight);
+    $('.panel-top').resizable({
+        handleSelector: "#content-splitter",
+        resizeWidth: false,
+        onDragEnd: function (e,el,opt) {
+            updateInputAreaHeight (theApp);
+        }
+    });
+
+    $(window).resize (()=>updateInputAreaHeight(theApp));
+
+    updateInputAreaHeight (theApp);
 });

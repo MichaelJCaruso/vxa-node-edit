@@ -16,9 +16,98 @@ a {
 .response {
 }
 
-#content {
+/* CodeMirror  */
+.CodeMirror {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+/* horizontal panel*/
+
+.panel-container-horizontal {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid silver;
+  overflow: hidden;
+
+  /* avoid browser level touch actions */
+  xtouch-action: none;
+}
+
+.panel-left {
+  flex: 0 0 auto;
+  /* only manually resize */
+  padding: 10px;
+  width: 300px;
+  min-height: 200px;
+  min-width: 150px;
+  white-space: nowrap;
+  /* background: #838383; */
+  /* color: white; */
+}
+
+.splitter-left-right {
+  flex: 0 0 auto;
+  width: 18px;
+  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/vsizegrip.png) center center no-repeat #535353;
+  min-height: 200px;
+  cursor: col-resize;
+}
+
+.panel-right {
+  flex: 1 1 auto;
+  /* resizable */
+  padding: 10px;
+  width: 100%;
+  min-height: 200px;
+  min-width: 200px;
+  background: #eee;
+}
+
+
+/* vertical panel */
+
+.panel-container-vertical {
   display: flex;
   flex-direction: column;
+  border: 1px solid silver;
+}
+
+.panel-top {
+  flex: 0 0 auto;
+  /* only manually resize */
+  padding: 10px;
+  width: 100%;
+  white-space: nowrap;
+  /*  background: #838383; */
+}
+
+.splitter-top-bottom {
+  flex: 0 0 auto;
+  height: 18px;
+  background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/hsizegrip.png) center center no-repeat #535353;
+  cursor: row-resize;
+}
+
+.panel-bottom {
+    flex: 1 1 auto;
+    position: relative;
+  /* resizable */
+/*  padding: 10px; */
+    min-height: 10px;
+    height: 100%;
+    width: 100%;
+  background: #eee;
+}
+
+#content {
+/*
+  display: flex;
+  flex-direction: column;
+*/
   margin-left: auto;
   margin-right: auto;
 }
@@ -31,8 +120,4 @@ a {
     background-color: #eee;
     margin-bottom: 1em;
     margin-right: 10px;
-}
-
-#help {
-  font: 10px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
