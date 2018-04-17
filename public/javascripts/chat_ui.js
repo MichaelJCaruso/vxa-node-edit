@@ -61,21 +61,17 @@ function updateInputAreaHeight (theApp) {
         child.width  (parent.width () - 5);
     }) ($(window), $('#content'));
 
-    displayHandW (window);
     displayHandW ('body');
     displayHandW ('#content');
 
     (h=> {
         console.log ("input height = ", h);
         $('#input-area').height(h);
-        theApp.editor.setSize (null,h);
     })(
 	Math.max (
 	    $('#content').height()
 		- $('#message-area').height()
                 - $('#content-splitter').height ()
-//		- $('#viz').height()
-//		- 50
 	    , 10
 	)
     );
@@ -91,8 +87,6 @@ $(document).ready(function() {
     const socket = io.connect();
 
     theApp = new Chat(
-//	socket, CodeMirror.fromTextArea (
-//          $("#editor")[0], {
 	socket, CodeMirror (
 	    $('#input-area')[0], {
                 mode: "smalltalk",

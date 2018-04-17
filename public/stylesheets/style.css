@@ -61,8 +61,6 @@ html {
     min-height: 200px;
     min-width: 150px;
     white-space: nowrap;
-    /* background: #838383; */
-    /* color: white; */
 }
 
 .splittable-row-right {
@@ -72,7 +70,6 @@ html {
     width: 100%;
     min-height: 200px;
     min-width: 200px;
-    background: #eee;
 }
 
 .splittable-row-splitter {
@@ -95,18 +92,15 @@ html {
 .splittable-column-top {
     flex: 0 0 auto;
     /* only manually resize */
-    /* padding: 10px; */
     height: 50%;
     width: 100%;
     white-space: nowrap;
-    /*  background: #838383; */
 }
 
 .splittable-column-bottom {
     flex: 1 1 auto;
     position: relative;
     /* resizable */
-    /*  padding: 10px; */
     min-height: 10px;
     height: 50%;
     width: 100%;
@@ -132,6 +126,4 @@ html {
 
 #messages {
     background-color: #eee;
-    margin-bottom: 1em;
-    margin-right: 10px;
 }
