@@ -75,6 +75,8 @@ $(document).ready(function() {
                 matchBrackets: true,
                 showTrailingSpace: true,
                 keyMap: "emacs",
+                theme: "pastel-on-dark",
+//                theme: "lesser-dark",
                 extraKeys: {
                     F2: cm=>theApp.processRequest(),
                     F11: cm=>cm.setOption("fullScreen", !cm.getOption("fullScreen")),
