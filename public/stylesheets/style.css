@@ -51,29 +51,27 @@ html {
     display: flex;
     flex-direction: row;
     border: 1px solid silver;
-    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
 
     /* avoid browser level touch actions */
     xtouch-action: none;
 }
 
-.splittable-row-left {
+.splittable-row-first {
+    /* manually resized */
     flex: 0 0 auto;
-    /* only manually resize */
-    padding: 10px;
-    width: 300px;
-    min-height: 200px;
-    min-width: 150px;
+    width: 50%;
     white-space: nowrap;
 }
 
-.splittable-row-right {
+.splittable-row-rest {
+    /* automatically resized */
     flex: 1 1 auto;
-    /* resizable */
-    padding: 10px;
-    width: 100%;
-    min-height: 200px;
-    min-width: 200px;
+    position: relative;
+    width: 50%;
+    min-width: 10px;
 }
 
 .splittable-row-splitter {
@@ -93,22 +91,19 @@ html {
     width: 100%;
 }
 
-.splittable-column-top {
+.splittable-column-first {
+    /* manually resized */
     flex: 0 0 auto;
-    /* only manually resize */
     height: 50%;
-    width: 100%;
     white-space: nowrap;
 }
 
-.splittable-column-bottom {
+.splittable-column-rest {
+    /* automatically resized */
     flex: 1 1 auto;
     position: relative;
-    /* resizable */
-    min-height: 10px;
     height: 50%;
-    width: 100%;
-    background: #eee;
+    min-height: 10px;
 }
 
 .splittable-column-splitter {
@@ -126,8 +121,8 @@ html {
 
 #message-area {
     overflow: auto;
+    background-color: #eee;
 }
 
 #messages {
-    background-color: #eee;
 }

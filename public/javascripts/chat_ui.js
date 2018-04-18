@@ -45,18 +45,17 @@ function processResponse(response) {
 }
 
 /******************/
-function displayHandW (selector) {
-    var el = $(selector);
-    console.log (
-        selector, el.height (), el.width (), el.innerHeight (), el.innerWidth ()
-    );
-}
-
 function onResizeHandler () {
     ((parent, child)=>{
         child.height (parent.height() - 5);
         child.width  (parent.width () - 5);
     }) ($(window), $('#content'));
+}
+
+/******************/
+function splitLimiter (element, proposal, limit) {
+    if (proposal > limit)
+        return false;
 }
 
 /******************/
@@ -94,9 +93,21 @@ $(document).ready(function() {
 
 //  setInterval (function() {socket.emit ('ping-pong');}, 750);
 
-    $('.splittable-column-top').resizable({
+    $('.splittable-column-first').resizable({
         handleSelector: '.splittable-column-splitter',
-        resizeWidth: false
+        resizeWidth: false,
+        onDrag: function (e, element, newWidth, newHeight, opt) {
+            if (newHeight > element.parent().height() - 25)
+                return false;
+        }
+    });
+    $('.splittable-row-first').resizable({
+        handleSelector: '.splittable-row-splitter',
+        resizeHeight: false,
+        onDrag: function (e, element, newWidth, newHeight, opt) {
+            if (newWidth > element.parent().width() - 30)
+                return false;
+        }
     });
 
     $(window).resize (onResizeHandler);
