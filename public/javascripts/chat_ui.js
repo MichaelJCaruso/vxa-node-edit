@@ -72,10 +72,14 @@ $(document).ready(function() {
 	    $('#input-area')[0], {
                 mode: "smalltalk",
                 lineNumbers: true,
+                matchBrackets: true,
+                showTrailingSpace: true,
                 keyMap: "emacs",
                 extraKeys: {
                     F2: cm=>theApp.processRequest(),
-                    "Alt-S": "findPersistentNext"
+                    F11: cm=>cm.setOption("fullScreen", !cm.getOption("fullScreen")),
+                    "Ctrl-S": "findPersistent",
+                    "Alt-G": "jumpToLine"
                 }
             }
 	)

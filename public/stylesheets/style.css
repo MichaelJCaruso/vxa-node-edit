@@ -38,8 +38,26 @@ html {
     position: absolute;
     top: 0;
     left: 0;
+    right: 0;
+    left: 0;
     height: 100%;
     width: 100%;
+}
+
+.CodeMirrorContainer {
+    flex: 1 1 auto;
+/*
+    margin-top: 0;
+*/
+    height: 100%;
+    position: relative;
+}
+
+.CodeMirror-fullscreen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  height: auto;
+  z-index: 9;
 }
 
 /*----------------*/
@@ -53,7 +71,6 @@ html {
     border: 1px solid silver;
     height: 100%;
     width: 100%;
-    overflow: auto;
 
     /* avoid browser level touch actions */
     xtouch-action: none;
@@ -66,11 +83,10 @@ html {
     white-space: nowrap;
 }
 
-.splittable-row-rest {
+.splittable-row-other {
     /* automatically resized */
     flex: 1 1 auto;
     position: relative;
-    width: 50%;
     min-width: 10px;
 }
 
@@ -96,14 +112,16 @@ html {
     flex: 0 0 auto;
     height: 50%;
     white-space: nowrap;
+    overflow: auto;
 }
 
-.splittable-column-rest {
+.splittable-column-other {
     /* automatically resized */
     flex: 1 1 auto;
     position: relative;
     height: 50%;
     min-height: 10px;
+    overflow: auto;
 }
 
 .splittable-column-splitter {
