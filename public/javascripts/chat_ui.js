@@ -51,30 +51,12 @@ function displayHandW (selector) {
         selector, el.height (), el.width (), el.innerHeight (), el.innerWidth ()
     );
 }
-function updateInputAreaHeight (theApp) {
-    displayHandW (window);
-    displayHandW ('body');
-    displayHandW ('#content');
 
-    ((parent, child)=> {
+function onResizeHandler () {
+    ((parent, child)=>{
         child.height (parent.height() - 5);
         child.width  (parent.width () - 5);
     }) ($(window), $('#content'));
-
-    displayHandW ('body');
-    displayHandW ('#content');
-
-    (h=> {
-        console.log ("input height = ", h);
-        $('#input-area').height(h);
-    })(
-	Math.max (
-	    $('#content').height()
-		- $('#message-area').height()
-                - $('#content-splitter').height ()
-	    , 10
-	)
-    );
 }
 
 /******************/
@@ -113,14 +95,10 @@ $(document).ready(function() {
 //  setInterval (function() {socket.emit ('ping-pong');}, 750);
 
     $('.splittable-column-top').resizable({
-        handleSelector: "#content-splitter",
-        resizeWidth: false,
-        onDragEnd: function (e,el,opt) {
-            updateInputAreaHeight (theApp);
-        }
+        handleSelector: '.splittable-column-splitter',
+        resizeWidth: false
     });
 
-    $(window).resize (()=>updateInputAreaHeight(theApp));
-
-    updateInputAreaHeight (theApp);
+    $(window).resize (onResizeHandler);
+    $(window).resize ();
 });
