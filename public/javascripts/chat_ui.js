@@ -67,6 +67,7 @@ $(document).ready(function() {
 
     const socket = io.connect();
 
+    console.log (smiley);
     theApp = new Chat(
 	socket, CodeMirror (
 	    $('#input-area')[0], {
@@ -76,13 +77,17 @@ $(document).ready(function() {
                 showTrailingSpace: true,
                 keyMap: "emacs",
                 theme: "pastel-on-dark",
-//                theme: "lesser-dark",
                 extraKeys: {
                     F2: cm=>theApp.processRequest(),
+                    Tab: cm=>theApp.processRequest(),
                     F11: cm=>cm.setOption("fullScreen", !cm.getOption("fullScreen")),
                     "Ctrl-S": "findPersistent",
-                    "Alt-G": "jumpToLine"
-                }
+                    "Alt-G": "jumpToLine",
+                    "Ctrl-Q": cm=>cm.foldCode(cm.getCursor())
+                },
+                foldGutter: true,
+                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                autofocus: true
             }
 	)
     );
