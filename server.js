@@ -46,9 +46,9 @@ module.exports.v = visionServer.v;
 app.use ('/cgi-bin/vquery.exe', visionServer.VQueryHandler ());
 
 /*----------------*/
-const chatServer = require('./lib/chat_server');
-module.exports.chatServer = chatServer;
-chatServer.listen(httpServer);
+const vdashServer = require('./lib/vdash_server');
+module.exports.vdashServer = vdashServer;
+vdashServer.listen(httpServer);
 
 /*----------------*/
 httpServer.listen(process.env.PORT || 3000, function() {

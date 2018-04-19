@@ -67,8 +67,7 @@ $(document).ready(function() {
 
     const socket = io.connect();
 
-    console.log (smiley);
-    theApp = new Chat(
+    theApp = new VDash (
 	socket, CodeMirror (
 	    $('#input-area')[0], {
                 mode: "smalltalk",
