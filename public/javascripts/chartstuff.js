@@ -1,16 +1,15 @@
 //     d3.json("./tweets.json", data => histogram(data.tweets) );
 
 var whichgram = histogram2;
-function showGraph (url) {
-    $('#viz-svg').empty ();
+function showGraph (svg, url) {
     d3.json(
 	url,
-	data => whichgram(data.tweets, d => d.favorites.length)
+	data => whichgram('#'+svg.attr('id'), data.tweets, d => d.favorites.length)
     );
 }
 
 /********************************/
-function histogram1(input,accessor) {
+function histogram1(container,input,accessor) {
     var xScale = d3.scaleLinear().domain([ 0, 5 ]).range([ 0, 500 ]);
     var yScale = d3.scaleLinear().domain([ 0, 10 ]).range([ 400, 0 ]);
     var xAxis = d3.axisBottom().scale(xScale).ticks(5);
@@ -24,7 +23,7 @@ function histogram1(input,accessor) {
 
     histoData = histoChart(input);
 
-    d3.select("svg")
+    d3.select(container)
         .selectAll("rect")
         .data(histoData).enter()
         .append("rect")
@@ -34,20 +33,20 @@ function histogram1(input,accessor) {
         .attr("height", d => 400 - yScale(d.length))
         .style("fill", "#FCD88B");
     
-    d3.select("svg").append("g").attr("class", "x axis")
+    d3.select(container).append("g").attr("class", "x axis")
         .attr("transform", "translate(0,400)").call(xAxis);
     
     d3.select("g.axis").selectAll("text").attr("dx", 50);
 }
 
 /********************************/
-function histogram2(input,accessor) {
+function histogram2(container,input,accessor) {
     var formatCount = d3.format(",.0f");
 
     var minWidth  = 2,
 	minHeight = 2;
     
-    var svg = d3.select("svg"),
+    var svg = d3.select(container),
 	margin = {top: 10, right: 30, bottom: 30, left: 30},
 	width = Math.max(+svg.attr("width") - margin.left - margin.right,minWidth),
 	height = Math.max(+svg.attr("height") - margin.top - margin.bottom,minHeight),

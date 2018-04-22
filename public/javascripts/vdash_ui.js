@@ -1,34 +1,25 @@
-function onRequestHover (event) {
-    console.log ('request', event);
-}
+/******************/
 
-function onResponseHover (event) {
-    console.log ('response', event);
-}
+var NewID = (function () {var nextId = 0; return function () {return nextId++;}})();
 
-function onTxnHover (event) {
+/******************/
+function NewTranscriptEntry (builder) {
+    return (entry=>{
+        builder(entry);
+        $('#messages').append (entry);
+        return entry;
+    })(TranscriptElement());
 }
 
 /******************/
-function LogEntry (request,response) {
-    var element = $('<div></div>').addClass ('log-element');
-    if (request)
-        element.append (RequestElement (request));
-    element.append (ResponseElement (response));
-    return element;
+function TranscriptElement () {
+    return $('<div></div>')
+        .addClass ('transcript-entry');
 }
-
-function RequestElement (request) {
-    return EscapedContentElement (request)
-        .addClass('request');
-}
-
-function ResponseElement (response) {
-    return (
-        response.charAt(0) === "<"
-	    ? SystemContentElement (response)
-	    : EscapedContentElement (response)
-    ).addClass ('response');
+    
+function SVGElement () {
+    return $('<svg style="width:100%;height:100%;"></svg>')
+        .attr('id', "svg_"+NewID());
 }
 
 function EscapedContentElement(content) {
@@ -36,11 +27,47 @@ function EscapedContentElement(content) {
 }
 
 function SystemContentElement(content) {
-  return $('<div></div>').html(content);
+    return $('<div></div>').html(content);
 }
 
+/******************/
 function processResponse(response) {
-    $('#messages').append (LogEntry (response.request,response.text));
+    NewTranscriptEntry (
+        entry=>{
+            AppendRequest (entry, response.request);
+            AppendResponse(entry, response.text);
+            return entry;
+        }
+    );
+}
+
+function AppendRequest (container,request) {
+    if (request) {
+        container.append (
+            EscapedContentElement (request)
+                .addClass('request')
+        );
+    }
+}
+
+function AppendResponse (container,response) {
+    container.append (
+        (response.charAt(0) === "<"
+	 ? SystemContentElement (response)
+	 : EscapedContentElement (response)
+        ).addClass ('response')
+    );
+}
+
+/******************/
+function processGraphRequest(...source) {
+    NewTranscriptEntry (
+        entry=>{
+            var svg = SVGElement();
+            entry.append(svg);
+	    showGraph (svg, ...source);
+        }
+    );
 }
 
 /******************/
@@ -91,12 +118,7 @@ $(document).ready(function() {
     );
 
     socket.on('message', processResponse);
-    socket.on(
-	'showGraph', function (source) {
-	    console.log ("Got showGraph " + source);
-	    showGraph (source);
-	}
-    );
+    socket.on('showGraph', processGraphRequest);
 
     socket.on('ping-pong', function (message) {});
 

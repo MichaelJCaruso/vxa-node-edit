@@ -1,0 +1,21 @@
+.bar rect {
+    fill: steelblue;
+}
+
+.bar text {
+    fill: #fff;
+    font: 10px sans-serif;
+}
+
+.tick > line {
+    stroke: #EBD8C1;
+}
+
+text {
+    fill: #C4B9AC;
+}
+
+path.domain {
+    stroke: none;
+    fill: none;
+}

@@ -12,7 +12,7 @@ a {
 }
 
 /*----------------*/
-.log-element {
+.transcript-entry {
     resize: vertical;
     overflow: auto;
     border-bottom: 1px dotted;
