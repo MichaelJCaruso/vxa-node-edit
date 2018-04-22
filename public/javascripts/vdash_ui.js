@@ -13,21 +13,27 @@ function NewTranscriptEntry (builder) {
 
 /******************/
 function TranscriptElement () {
-    return $('<div></div>')
-        .addClass ('transcript-entry');
+    return DIV ().addClass ('transcript-entry');
 }
-    
-function SVGElement () {
-    return $('<svg style="width:100%;height:100%;"></svg>')
-        .attr('id', "svg_"+NewID());
+
+function DIV () {
+    return $('<div></div>');
+}
+
+function PRE () {
+    return $('<pre></pre>');
+}
+
+function Identified (element) {
+    return element.attr ('id', 'element'+NewID ());
 }
 
 function EscapedContentElement(content) {
-    return $('<pre></pre>').text (content);
+    return PRE().text (content);
 }
 
 function SystemContentElement(content) {
-    return $('<div></div>').html(content);
+    return DIV().html(content);
 }
 
 /******************/
@@ -60,13 +66,9 @@ function AppendResponse (container,response) {
 }
 
 /******************/
-function processGraphRequest(...source) {
+function processGraphRequest(...args) {
     NewTranscriptEntry (
-        entry=>{
-            var svg = SVGElement();
-            entry.append(svg);
-	    showGraph (svg, ...source);
-        }
+        entry=>showGraph(entry,...args)
     );
 }
 
