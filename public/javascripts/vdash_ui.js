@@ -10,23 +10,22 @@ function onTxnHover (event) {
 }
 
 /******************/
-function TxnElement (request,response) {
-    var element = $('<div"></div>').addClass ('txn');
+function LogEntry (request,response) {
+    var element = $('<div></div>').addClass ('log-element');
     if (request)
-        element.append (RequestText (request));
-    element.append (ResponseText (response));
+        element.append (RequestElement (request));
+    element.append (ResponseElement (response));
     return element;
 }
 
-function RequestText (request) {
+function RequestElement (request) {
     return EscapedContentElement (request)
-        .addClass('request')
-        .hover(onRequestHover);
+        .addClass('request');
 }
 
-function ResponseText (response) {
+function ResponseElement (response) {
     return (
-        response.substring (0,1) === "<"
+        response.charAt(0) === "<"
 	    ? SystemContentElement (response)
 	    : EscapedContentElement (response)
     ).addClass ('response');
@@ -41,7 +40,7 @@ function SystemContentElement(content) {
 }
 
 function processResponse(response) {
-    $('#messages').append (TxnElement (response.request,response.text));
+    $('#messages').append (LogEntry (response.request,response.text));
 }
 
 /******************/

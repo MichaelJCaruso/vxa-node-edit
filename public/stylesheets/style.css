@@ -12,7 +12,10 @@ a {
 }
 
 /*----------------*/
-.txn {
+.log-element {
+    resize: vertical;
+    overflow: auto;
+    border-bottom: 1px dotted;
 }
 
 .request {
