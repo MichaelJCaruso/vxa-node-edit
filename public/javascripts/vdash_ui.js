@@ -106,7 +106,7 @@ $(document).ready(function() {
                 theme: "pastel-on-dark",
                 extraKeys: {
                     F2: cm=>theApp.processRequest(),
-                    Tab: cm=>theApp.processRequest(),
+//                    Tab: cm=>theApp.processRequest(),
                     F11: cm=>cm.setOption("fullScreen", !cm.getOption("fullScreen")),
                     "Ctrl-S": "findPersistent",
                     "Alt-G": "jumpToLine",
