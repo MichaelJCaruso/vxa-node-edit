@@ -51,8 +51,9 @@ module.exports.vdashServer = vdashServer;
 vdashServer.listen(httpServer);
 
 /*----------------*/
-httpServer.listen(process.env.PORT || 3000, function() {
-  console.log("Server listening on port 3000.");
+var port = process.env.PORT || 3000;
+httpServer.listen(port, function() {
+  console.log("Server listening on port " + port);
 });
 
 /*
