@@ -54,6 +54,7 @@ JS jsObject showGraph: "Line" with: (
  groupedBy: [industry].
     select: [isntDefault].
   sortDown: [groupList count];
+
 JS jsObject
   showGraph: "Bar"
   of: (
@@ -75,6 +76,7 @@ JS jsObject
  groupedBy: [industry].
     select: [isntDefault].
   sortDown: [groupList count];
+
 JS jsObject
   showGraph: "Bar"
   of: (
@@ -100,6 +102,7 @@ JS jsObject
  groupedBy: [industry].
     select: [isntDefault].
   sortDown: [groupList count];
+
 JS jsObject showGraph: "Bar" of: (
   JS newObject
   set: "labels" toArrayFrom: (data send: [[name print] divertOutput]) .
@@ -113,4 +116,21 @@ JS jsObject showGraph: "Bar" of: (
   set: "height" to: (data count * 40) asInteger .
   jsObject \.id
 );
+*****************/
+
+/*****************
+!data <- Security masterList
+ groupedBy: [industry].
+    select: [isntDefault].
+  sortDown: [groupList count].
+     first: 15;
+
+JS jsObject showGraph: "Pie" of: (
+  JS newObject
+  set: "labels" toArrayFrom: (data send: [name]).
+  set: "series" toArrayFrom: (data send: [groupList count]).
+) jsObject \.id withOptions: (
+  JS newObject
+  set: "height" to: 1000
+) jsObject \.id;
 *****************/
