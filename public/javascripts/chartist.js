@@ -67,7 +67,7 @@ JS jsObject
     JS newObject
       set: "width" to: "10000px".
       set: "height" to: 400
-  ) jsObject \.id
+  ) jsObject \.id;
 *****************/
 
 /*****************
@@ -86,11 +86,31 @@ JS jsObject
   ) jsObject \.id
   withOptions: (
     JS newObject
-      set: "width" to: "10000px".
+      set: "width" to: "15000px".
       set: "height" to: 400 .
       set: "axisX" to: (
         JS newObject
           set: "offset" to: 100 .
       ) jsObject \.id
-  ) jsObject \.id
+  ) jsObject \.id;
+*****************/
+
+/*****************
+!data <- Security masterList
+ groupedBy: [industry].
+    select: [isntDefault].
+  sortDown: [groupList count];
+JS jsObject showGraph: "Bar" of: (
+  JS newObject
+  set: "labels" toArrayFrom: (data send: [[name print] divertOutput]) .
+  set: "series" toArrayFrom: (
+    (JS newArrayFrom: (data send: [groupList count])) asList
+  ).
+  jsObject \.id
+) withOptions: (
+  JS newObject
+  set: "horizontalBars" to: 1 .
+  set: "height" to: (data count * 40) asInteger .
+  jsObject \.id
+);
 *****************/
