@@ -44,8 +44,7 @@ JS jsObject showGraph: "Line" with: (
   set: "labels" toArrayFrom: 7 sequence .
   set: "series" toArrayFrom: (
      (JS newArrayFrom: 100,120,180,300,-200,234,168) asList
-  ).
-  jsObject \.id
+  ). jsParam
 );
 *****************/
 
@@ -63,12 +62,12 @@ JS jsObject
       set: "series" toArrayFrom: (
         (JS newArrayFrom: (data send: [groupList count])) asList
       )
-  ) jsObject \.id
+  ) jsParam
   withOptions: (
     JS newObject
       set: "width" to: "10000px".
       set: "height" to: 400
-  ) jsObject \.id;
+  ) jsParam;
 *****************/
 
 /*****************
@@ -85,7 +84,7 @@ JS jsObject
       set: "series" toArrayFrom: (
         (JS newArrayFrom: (data send: [groupList count])) asList
       )
-  ) jsObject \.id
+  ) jsParam
   withOptions: (
     JS newObject
       set: "width" to: "15000px".
@@ -93,8 +92,8 @@ JS jsObject
       set: "axisX" to: (
         JS newObject
           set: "offset" to: 100 .
-      ) jsObject \.id
-  ) jsObject \.id;
+      ) jsParam
+  ) jsParam;
 *****************/
 
 /*****************
@@ -109,12 +108,12 @@ JS jsObject showGraph: "Bar" of: (
   set: "series" toArrayFrom: (
     (JS newArrayFrom: (data send: [groupList count])) asList
   ).
-  jsObject \.id
+  jsParam
 ) withOptions: (
   JS newObject
   set: "horizontalBars" to: 1 .
   set: "height" to: (data count * 40) asInteger .
-  jsObject \.id
+  jsParam
 );
 *****************/
 
@@ -129,8 +128,8 @@ JS jsObject showGraph: "Pie" of: (
   JS newObject
   set: "labels" toArrayFrom: (data send: [name]).
   set: "series" toArrayFrom: (data send: [groupList count]).
-) jsObject \.id withOptions: (
+) jsParam withOptions: (
   JS newObject
   set: "height" to: 1000
-) jsObject \.id;
+) jsParam;
 *****************/
