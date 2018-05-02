@@ -68,16 +68,6 @@ function AppendResponse (container,response) {
 /******************/
 function processGraphRequest(...args) {
     NewTranscriptEntry (
-/*
-        entry=>{
-            var graphContainer = DIV ()
-                .attr ('overflow', 'scroll')
-                .attr ('height', 'auto')
-                .attr ('width', 'auto');
-            entry.append (graphContainer);
-            showGraph(graphContainer[0],...args)
-        }
-*/
         entry=>showGraph(entry[0],...args)
     );
 }
