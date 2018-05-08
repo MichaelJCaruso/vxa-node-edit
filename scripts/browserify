@@ -1,0 +1,1 @@
+browserify -r remote-lib -r websocket-stream
