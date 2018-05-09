@@ -123,12 +123,39 @@ class VDashUI {
 }
 
 /******************/
+function platformOSType() {
+    var detectedOS;
+    return detectedOS || (function (appv) {
+        detectedOS =
+            appv.indexOf("Win"  )!=-1 ? "Windows" :
+            appv.indexOf("Mac"  )!=-1 ? "Mac"     :
+            appv.indexOf("Linux")!=-1 ? "Linux"   :
+            appv.indexOf("X11"  )!=-1 ? "Unix"	  :
+            "Unknown";
+        return detectedOS;
+    })(navigator.appVersion);
+}
+
+function platformExtraKeys (extraKeys) {
+    return Object.assign (
+        extraKeys, {
+            Linux: {
+                "Ctrl-V": false // ... turn off 'Ctrl-V' if it's likely to be 'paste'
+            },
+            Unix: {
+                "Ctrl-V": false // ... turn off 'Ctrl-V' if it's likely to be 'paste'
+            },
+            Windows: {
+                "Ctrl-V": false // ... turn off 'Ctrl-V' if it's likely to be 'paste'
+            }
+        }[platformOSType()] || {}
+    );
+}
+
+/******************/
 var theApp;
 
 $(document).ready(function() {
-    if (theApp)
-        return;
-
     const socket = io.connect();
 
     theApp = new VDash (
@@ -140,14 +167,13 @@ $(document).ready(function() {
                 showTrailingSpace: true,
                 keyMap: "emacs",
                 theme: "pastel-on-dark",
-                extraKeys: {
+                extraKeys: platformExtraKeys ({
                     F2: cm=>theApp.processRequest(),
-//                    Tab: cm=>theApp.processRequest(),
                     F11: cm=>cm.setOption("fullScreen", !cm.getOption("fullScreen")),
                     "Ctrl-S": "findPersistent",
                     "Alt-G": "jumpToLine",
                     "Ctrl-Q": cm=>cm.foldCode(cm.getCursor())
-                },
+                }),
                 foldGutter: true,
                 gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                 autofocus: true
