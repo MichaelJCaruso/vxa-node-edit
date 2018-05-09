@@ -5,7 +5,12 @@
 
 /******************/
 
-var NewID = (function () {var nextId = 0; return function () {return nextId++;}})();
+var NewID = (
+    function () {
+	var nextId = 0;
+	return function () {return nextId++;}
+    }
+)();
 
 /******************/
 function NewTranscriptEntry (builder) {
@@ -89,6 +94,28 @@ function onResizeHandler () {
 function splitLimiter (element, proposal, limit) {
     if (proposal > limit)
         return false;
+}
+
+/******************/
+class VDashTransport {
+    constructor() {
+    }
+}
+
+class VDashSocket extends VDashTransport {
+    constructor() {
+	super();
+	this.socket = io.connect();
+
+	socket.on('ping-pong', function (message) {});
+	// setInterval (function() {socket.emit ('ping-pong');}, 750);
+    }
+}
+
+/******************/
+class VDashUI {
+    constructor() {
+    }
 }
 
 /******************/
