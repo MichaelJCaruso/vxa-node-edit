@@ -14,9 +14,13 @@ var NewID = (
 
 /******************/
 function NewTranscriptEntry (builder) {
+    const transcript=$('#transcript');
+    const transcriptParent = transcript.parent();
+    const transcriptHeight = transcriptParent.prop('scrollHeight');
     return (entry=>{
         builder(entry);
-        $('#messages').append (entry);
+        transcript.append (entry);
+        transcriptParent.scrollTop(transcriptHeight);
         return entry;
     })(TranscriptElement());
 }

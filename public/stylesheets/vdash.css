@@ -12,6 +12,9 @@ a {
 }
 
 /*----------------*/
+.transcript {
+}
+
 .transcript-entry {
     resize: vertical;
     overflow: auto;
@@ -133,17 +136,15 @@ html {
     background: url(https://raw.githubusercontent.com/RickStrahl/jquery-resizable/master/assets/hsizegrip.png) center center no-repeat #535353;
     cursor: row-resize;
 }
-/*----------------*/
 
+/*----------------*/
 #content {
     margin-left: 0px;
     margin-right: 0px;
 }
 
-#message-area {
-    overflow: auto;
-    background-color: #eee;
+#input-area {
 }
 
-#messages {
+#transcript {
 }
