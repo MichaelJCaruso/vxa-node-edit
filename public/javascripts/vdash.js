@@ -1,22 +1,12 @@
 class VDash {
-    constructor(socket,editor) {
-	this.editor = editor;
-	this.socket = socket;
+    constructor(remote) {
+	this.remote = remote;
     }
 
-    processRequest() {
-	var request = this.editor.getValue ();
-	this.editor.setValue('');
+    processRequest(request) {
 	console.log ("Edit Request: ", request);
-	this.sendMessage(request);
+	this.remote.evaluate(request);
     }
-
-    sendMessage(text) {
-	var message = {
-	    text: text
-	};
-	this.socket.emit('message', message);
-    };
 }
 
 /*****************

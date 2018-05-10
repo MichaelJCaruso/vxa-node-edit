@@ -111,14 +111,15 @@ class VDashSocket extends VDashTransport {
 	super();
 	this.socket = io.connect();
 
-	socket.on('ping-pong', function (message) {});
+	this.socket.on('ping-pong', function (message) {});
 	// setInterval (function() {socket.emit ('ping-pong');}, 750);
-    }
-}
 
-/******************/
-class VDashUI {
-    constructor() {
+        this.socket.on('message', processResponse);
+        this.socket.on('showGraph', processGraphRequest);
+    }
+
+    evaluate(text) {
+        this.socket.emit ('message',{text});
     }
 }
 
@@ -153,13 +154,10 @@ function platformExtraKeys (extraKeys) {
 }
 
 /******************/
-var theApp;
-
-$(document).ready(function() {
-    const socket = io.connect();
-
-    theApp = new VDash (
-	socket, CodeMirror (
+class VDashUI {
+    constructor(theApp) {
+        this.theApp = theApp;
+        this.editor = CodeMirror (
 	    $('#input-area')[0], {
                 mode: "smalltalk",
                 lineNumbers: true,
@@ -168,7 +166,7 @@ $(document).ready(function() {
                 keyMap: "emacs",
                 theme: "pastel-on-dark",
                 extraKeys: platformExtraKeys ({
-                    F2: cm=>theApp.processRequest(),
+                    F2: cm=>this.processRequest(),
                     F11: cm=>cm.setOption("fullScreen", !cm.getOption("fullScreen")),
                     "Ctrl-S": "findPersistent",
                     "Alt-G": "jumpToLine",
@@ -178,33 +176,39 @@ $(document).ready(function() {
                 gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
                 autofocus: true
             }
-	)
-    );
+	);
 
-    socket.on('message', processResponse);
-    socket.on('showGraph', processGraphRequest);
+        $('.splittable-column-first').resizable({
+            handleSelector: '.splittable-column-splitter',
+            resizeWidth: false,
+            onDrag: function (e, element, newWidth, newHeight, opt) {
+                if (newHeight > element.parent().height() - 25)
+                    return false;
+            }
+        });
+        $('.splittable-row-first').resizable({
+            handleSelector: '.splittable-row-splitter',
+            resizeHeight: false,
+            onDrag: function (e, element, newWidth, newHeight, opt) {
+                if (newWidth > element.parent().width() - 30)
+                    return false;
+            }
+        });
 
-    socket.on('ping-pong', function (message) {});
+        $(window).resize (onResizeHandler);
+        $(window).resize ();
+    }
 
-//  setInterval (function() {socket.emit ('ping-pong');}, 750);
+    processRequest() {
+	var request = this.editor.getValue ();
+	this.editor.setValue('');
+        this.theApp.processRequest(request);
+    }
+}
 
-    $('.splittable-column-first').resizable({
-        handleSelector: '.splittable-column-splitter',
-        resizeWidth: false,
-        onDrag: function (e, element, newWidth, newHeight, opt) {
-            if (newHeight > element.parent().height() - 25)
-                return false;
-        }
-    });
-    $('.splittable-row-first').resizable({
-        handleSelector: '.splittable-row-splitter',
-        resizeHeight: false,
-        onDrag: function (e, element, newWidth, newHeight, opt) {
-            if (newWidth > element.parent().width() - 30)
-                return false;
-        }
-    });
+/******************/
+var theApp;
 
-    $(window).resize (onResizeHandler);
-    $(window).resize ();
+$(document).ready(function() {
+    theApp = new VDashUI (new VDash (new VDashSocket ()));
 });
