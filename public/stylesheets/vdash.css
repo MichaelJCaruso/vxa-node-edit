@@ -21,10 +21,11 @@ a {
     border-bottom: 1px dotted;
 }
 
-.request {
+.transcript-request {
+    background-color: #a4bac8
 }
 
-.response {
+.transcript-response {
 }
 
 /*----------------*/
@@ -85,7 +86,7 @@ html {
 .splittable-row-first {
     /* manually resized */
     flex: 0 0 auto;
-    width: 50%;
+    width: 30%;
     white-space: nowrap;
 }
 
@@ -116,7 +117,7 @@ html {
 .splittable-column-first {
     /* manually resized */
     flex: 0 0 auto;
-    height: 50%;
+    height: 30%;
     white-space: nowrap;
     overflow: auto;
 }
@@ -125,7 +126,6 @@ html {
     /* automatically resized */
     flex: 1 1 auto;
     position: relative;
-    height: 50%;
     min-height: 10px;
     overflow: auto;
 }
