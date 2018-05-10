@@ -4,7 +4,9 @@
 // const websocket = require('websocket-stream');
 
 /******************/
+var theUI;
 
+/******************/
 var NewID = (
     function () {
 	var nextId = 0;
@@ -12,97 +14,16 @@ var NewID = (
     }
 )();
 
-/******************/
-function NewTranscriptEntry (builder) {
-    const transcript=$('#transcript');
-    const transcriptParent = transcript.parent();
-    const transcriptHeight = transcriptParent.prop('scrollHeight');
-    return (entry=>{
-        builder(entry);
-        transcript.append (entry);
-        transcriptParent.scrollTop(transcriptHeight);
-        return entry;
-    })(TranscriptElement());
-}
-
-/******************/
-function TranscriptElement () {
-    return DIV ().addClass ('transcript-entry');
-}
-
-function DIV () {
-    return $('<div></div>');
-}
-
-function PRE () {
-    return $('<pre></pre>');
-}
-
 function Identified (element) {
     return element.attr ('id', 'element'+NewID ());
-}
-
-function EscapedContentElement(content) {
-    return PRE().text (content);
-}
-
-function SystemContentElement(content) {
-    return DIV().html(content);
-}
-
-/******************/
-function processResponse(response) {
-    NewTranscriptEntry (
-        entry=>{
-            AppendRequest (entry, response.request);
-            AppendResponse(entry, response.text);
-            return entry;
-        }
-    );
-}
-
-function AppendRequest (container,request) {
-    if (request) {
-        container.append (
-            EscapedContentElement (request)
-                .addClass('request')
-        );
-    }
-}
-
-function AppendResponse (container,response) {
-    container.append (
-        (response.charAt(0) === "<"
-	 ? SystemContentElement (response)
-	 : EscapedContentElement (response)
-        ).addClass ('response')
-    );
-}
-
-/******************/
-function processGraphRequest(...args) {
-    NewTranscriptEntry (
-        entry=>showGraph(entry[0],...args)
-    );
-}
-
-/******************/
-function onResizeHandler () {
-    ((parent, child)=>{
-        child.height (parent.height() - 5);
-        child.width  (parent.width () - 5);
-    }) ($(window), $('#content'));
-}
-
-/******************/
-function splitLimiter (element, proposal, limit) {
-    if (proposal > limit)
-        return false;
 }
 
 /******************/
 class VDashTransport {
     constructor() {
+    }
+    onResponse(ui,response) {
+        ui.addTranscriptResponse(response)
     }
 }
 
@@ -111,62 +32,31 @@ class VDashSocket extends VDashTransport {
 	super();
 	this.socket = io.connect();
 
-	this.socket.on('ping-pong', function (message) {});
+	this.socket.on('ping-pong', (message)=>{});
 	// setInterval (function() {socket.emit ('ping-pong');}, 750);
 
-        this.socket.on('message', processResponse);
-        this.socket.on('showGraph', processGraphRequest);
+        this.socket.on('message'  , (message)=>this.onResponse(theUI,message));
+        this.socket.on('showGraph', (...args)=>theUI.addTranscriptGraph(...args));
     }
 
-    evaluate(text) {
-        this.socket.emit ('message',{text});
+    evaluate(expression,ui) {
+        this.socket.emit ('message',{text: expression},response=>this.onResponse(ui,response));
     }
 }
 
 /******************/
-function platformOSType() {
-    var detectedOS;
-    return detectedOS || (function (appv) {
-        detectedOS =
-            appv.indexOf("Win"  )!=-1 ? "Windows" :
-            appv.indexOf("Mac"  )!=-1 ? "Mac"     :
-            appv.indexOf("Linux")!=-1 ? "Linux"   :
-            appv.indexOf("X11"  )!=-1 ? "Unix"	  :
-            "Unknown";
-        return detectedOS;
-    })(navigator.appVersion);
-}
-
-function platformExtraKeys (extraKeys) {
-    return Object.assign (
-        extraKeys, {
-            Linux: {
-                "Ctrl-V": false // ... turn off 'Ctrl-V' if it's likely to be 'paste'
-            },
-            Unix: {
-                "Ctrl-V": false // ... turn off 'Ctrl-V' if it's likely to be 'paste'
-            },
-            Windows: {
-                "Ctrl-V": false // ... turn off 'Ctrl-V' if it's likely to be 'paste'
-            }
-        }[platformOSType()] || {}
-    );
-}
-
-/******************/
-class VDashUI {
-    constructor(theApp) {
-        this.theApp = theApp;
+class VDashEditor {
+    constructor (domElement,evaluator) {
         this.editor = CodeMirror (
-	    $('#input-area')[0], {
+	    domElement, {
                 mode: "smalltalk",
                 lineNumbers: true,
                 matchBrackets: true,
                 showTrailingSpace: true,
                 keyMap: "emacs",
                 theme: "pastel-on-dark",
-                extraKeys: platformExtraKeys ({
-                    F2: cm=>this.processRequest(),
+                extraKeys: VDashEditor.platformExtraKeys ({
+                    F2: cm=>VDashEditor.evaluate(evaluator,cm),
                     F11: cm=>cm.setOption("fullScreen", !cm.getOption("fullScreen")),
                     "Ctrl-S": "findPersistent",
                     "Alt-G": "jumpToLine",
@@ -177,6 +67,63 @@ class VDashUI {
                 autofocus: true
             }
 	);
+    }
+
+    /******/
+    static evaluate(evaluator,cm) {
+        evaluator(this.getExpression(cm));
+    }
+
+    /******/
+    static getExpression(cm) {
+        return cm.getSelections()[0] || (
+            ()=>{
+                const value=cm.getValue();
+	        cm.setValue('');
+                return value;
+            }
+        )();
+    }
+
+    /******/
+    static platformExtraKeys (extraKeys) {
+        return CodeMirror.normalizeKeyMap (
+            Object.assign (
+                extraKeys, {
+                    Linux: {
+                        "Ctrl-V" : false  // ... disable 'Ctrl-V' if it's likely to be 'paste'
+                    },
+                    Unix: {
+                        "Ctrl-V" : false  // ... disable 'Ctrl-V' if it's likely to be 'paste'
+                    },
+                    Windows: {
+                        "Ctrl-V" : false  // ... disable 'Ctrl-V' if it's likely to be 'paste'
+                    }
+                }[this.platformOSType()] || {}
+            )
+        );
+    }
+
+    /******/
+    static platformOSType() {
+        return (
+            (appv)=>
+                appv.indexOf("Win"  )!=-1 ? "Windows" :
+                appv.indexOf("Mac"  )!=-1 ? "Mac"     :
+                appv.indexOf("Linux")!=-1 ? "Linux"   :
+                appv.indexOf("X11"  )!=-1 ? "Unix"    :
+                "Unknown"
+        )(navigator.appVersion);
+    }
+}
+
+/******************/
+class VDashUI {
+    constructor(theApp) {
+        this.theApp = theApp;
+        this.editor = new VDashEditor (
+            $('#input-area')[0],expression=>this.evaluate(expression)
+        );
 
         $('.splittable-column-first').resizable({
             handleSelector: '.splittable-column-splitter',
@@ -195,20 +142,97 @@ class VDashUI {
             }
         });
 
-        $(window).resize (onResizeHandler);
-        $(window).resize ();
+        this.window = $(window);
+        this.content = $('#content');
+        this.transcript = $('#transcript');
+
+        this.window.resize (e=>this.onResize(e));
+        this.window.resize ();
     }
 
-    processRequest() {
-	var request = this.editor.getValue ();
-	this.editor.setValue('');
-        this.theApp.processRequest(request);
+    /******/
+    evaluate(expression) {
+        this.theApp.evaluate(expression,this);
     }
+
+    /******/
+    addTranscriptEntry (builder) {
+        const transcriptParent = this.transcript.parent();
+        const transcriptHeight = transcriptParent.prop('scrollHeight');
+        return (entry=>{
+            builder(entry);
+            this.transcript.append (entry);
+            transcriptParent.scrollTop(transcriptHeight);
+            return entry;
+        })(this.constructor.TranscriptElement());
+    }
+
+    addTranscriptGraph(...args) {
+        this.addTranscriptEntry (
+            entry=>showGraph(entry[0],...args)
+        );
+    }
+    addTranscriptResponse(response) {
+        this.addTranscriptEntry (
+            entry=>{
+                this.constructor.AppendRequest (entry, response.request);
+                this.constructor.AppendResponse(entry, response.text);
+                return entry;
+            }
+        );
+    }
+
+    /******/
+    onResize (e) {
+        this.content.height (this.window.height() - 5);
+        this.content.width  (this.window.width () - 5);
+    }
+
+    /******/
+    static TranscriptElement () {
+        return this.DIV ().addClass ('transcript-entry');
+    }
+
+    /******/
+    static AppendRequest (container,request) {
+        if (request) {
+            container.append (
+                this.EscapedContentElement (request)
+                    .addClass('transcript-request')
+            );
+        }
+    }
+
+    static AppendResponse (container,response) {
+        container.append (
+            (response.charAt(0) === "<"
+	     ? this.SystemContentElement (response)
+	     : this.EscapedContentElement (response)
+            ).addClass ('transcript-response')
+        );
+    }
+
+    /******/
+    static EscapedContentElement(content) {
+        return this.PRE().text (content);
+    }
+
+    static SystemContentElement(content) {
+        return this.DIV().html(content);
+    }
+
+    /******/
+    static DIV () {
+        return $('<div></div>');
+    }
+
+    static PRE () {
+        return $('<pre></pre>');
+    }
+
 }
 
 /******************/
-var theApp;
-
 $(document).ready(function() {
-    theApp = new VDashUI (new VDash (new VDashSocket ()));
+    theUI = new VDashUI (new VDash (new VDashSocket ()));
 });
