@@ -27,6 +27,7 @@ class VDashTransport {
     }
 }
 
+/******************/
 class VDashSocket extends VDashTransport {
     constructor() {
 	super();
@@ -40,7 +41,9 @@ class VDashSocket extends VDashTransport {
     }
 
     evaluate(expression,ui) {
-        this.socket.emit ('message',{text: expression},response=>this.onResponse(ui,response));
+        this.socket.emit (
+	    'message',{text: expression},response=>this.onResponse(ui,response)
+	);
     }
 }
 
@@ -56,7 +59,7 @@ class VDashEditor {
                 keyMap: "emacs",
                 theme: "pastel-on-dark",
                 extraKeys: VDashEditor.platformExtraKeys ({
-                    F2: cm=>VDashEditor.evaluate(evaluator,cm),
+                    F2: cm=>VDashEditor.callEvaluator(evaluator,cm),
                     F11: cm=>cm.setOption("fullScreen", !cm.getOption("fullScreen")),
                     "Ctrl-S": "findPersistent",
                     "Alt-G": "jumpToLine",
@@ -70,7 +73,7 @@ class VDashEditor {
     }
 
     /******/
-    static evaluate(evaluator,cm) {
+    static callEvaluator(evaluator,cm) {
         evaluator(this.getExpression(cm));
     }
 
