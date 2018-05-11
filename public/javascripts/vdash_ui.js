@@ -22,9 +22,6 @@ function Identified (element) {
 class VDashTransport {
     constructor() {
     }
-    onResponse(ui,response) {
-        ui.addTranscriptResponse(response)
-    }
 }
 
 /******************/
@@ -36,14 +33,20 @@ class VDashSocket extends VDashTransport {
 	this.socket.on('ping-pong', (message)=>{});
 	// setInterval (function() {socket.emit ('ping-pong');}, 750);
 
-        this.socket.on('message'  , (message)=>this.onResponse(theUI,message));
+        this.socket.on('message'  , (message)=>theUI.addTranscriptResponse(message.text));
         this.socket.on('showGraph', (...args)=>theUI.addTranscriptGraph(...args));
     }
 
-    evaluate(expression,ui) {
-        this.socket.emit (
-	    'message',{text: expression},response=>this.onResponse(ui,response)
-	);
+    evaluate(expression) {
+        return new Promise (
+            (resolve,reject)=>{
+                this.socket.emit (
+                    'message',
+                    {text: expression},
+                    response=>resolve(response.text)
+                );
+            }
+        );
     }
 }
 
@@ -154,8 +157,13 @@ class VDashUI {
     }
 
     /******/
-    evaluate(expression) {
-        this.theApp.evaluate(expression,this);
+    evaluate(request) {
+        this.theApp
+            .evaluate(request)
+            .then(
+                res=>this.addTranscriptResponse(res,request),
+                err=>this.addTranscriptResponse(err,request)
+            );
     }
 
     /******/
@@ -175,11 +183,11 @@ class VDashUI {
             entry=>showGraph(entry[0],...args)
         );
     }
-    addTranscriptResponse(response) {
+    addTranscriptResponse(response,request) {
         this.addTranscriptEntry (
             entry=>{
-                this.constructor.AppendRequest (entry, response.request);
-                this.constructor.AppendResponse(entry, response.text);
+                this.constructor.AppendRequest (entry, request);
+                this.constructor.AppendResponse(entry, response);
                 return entry;
             }
         );

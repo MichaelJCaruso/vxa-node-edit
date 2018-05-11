@@ -3,8 +3,8 @@ class VDash {
 	this.remote = remote;
     }
 
-    evaluate(expression,ui) {
+    evaluate(expression) {
 	console.log ("Evaluating: ", expression);
-	this.remote.evaluate(expression,ui);
+	return this.remote.evaluate(expression); // ... returns a Promise for the result
     }
 }
