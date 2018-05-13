@@ -34,6 +34,10 @@ class VDashSocket extends VDashTransport {
 	// setInterval (function() {socket.emit ('ping-pong');}, 750);
 
         this.socket.on('message'  , (message)=>theUI.addTranscriptResponse(message.text));
+	this.socket.on('proxyGet' , (...args)=>this.onRemoteGet (...args));
+	this.socket.on('proxySet' , (...args)=>this.onRemoteSet (...args));
+	this.socket.on('proxyCall', (...args)=>this.onRemoteCall(...args));
+
         this.socket.on('showGraph', (...args)=>theUI.addTranscriptGraph(...args));
     }
 
@@ -47,6 +51,22 @@ class VDashSocket extends VDashTransport {
                 );
             }
         );
+    }
+
+    onRemoteGet(property,argumentArray,cb) {
+	console.log('Remote get: ', property, argumentArray,cb);
+	try {
+	    cb(theUI[property](...argumentArray));
+	} catch(e) {
+	    console.log(e);
+	    cb(e);
+	}
+    }
+    onRemoteSet(property,value) {
+	console.log('Remote set:', property, value);
+    }
+    onRemoteCall(argumentArray) {
+	console.log('Remote call: ', argumentArray);
     }
 }
 
@@ -191,6 +211,11 @@ class VDashUI {
                 return entry;
             }
         );
+    }
+
+    /******/
+    showGraph(...args) {
+	return this.addTranscriptGraph(...args);
     }
 
     /******/
