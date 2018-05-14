@@ -8,11 +8,12 @@
     "express": "^4.16.3",
     "jquery": "^3.3.1",
     "jquery-resizable-dom": "^0.28.0",
-    "mime": "~1.2.7",
+    "mime": "^2.3.1",
     "morgan": "^1.9.0",
     "remote-lib": "^0.2.1",
-    "socket.io": "~0.9.6",
+    "socket.io": "^2.1.0",
     "vxanode": "github:MichaelJCaruso/vxa-node",
-    "websocket-stream": "^5.1.2"
+    "websocket-stream": "^5.1.2",
+    "ws": "^5.1.1"
   }
 }
