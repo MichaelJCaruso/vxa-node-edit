@@ -30,9 +30,6 @@ class VDashSocket extends VDashTransport {
 	super();
 	this.socket = io.connect();
 
-	this.socket.on('ping-pong', (message)=>{});
-	// setInterval (function() {socket.emit ('ping-pong');}, 750);
-
         this.socket.on('message'  , (message)=>theUI.addTranscriptResponse(message.text));
 	this.socket.on('proxyGet' , (...args)=>this.onRemoteGet (...args));
 	this.socket.on('proxySet' , (...args)=>this.onRemoteSet (...args));
