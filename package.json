@@ -1,7 +1,7 @@
 {
-  "name": "chatrooms",
+  "name": "vdash",
   "version": "0.0.1",
-  "description": "Minimalist multiroom chat server",
+  "description": "Vision in a browser proof of concept",
   "dependencies": {
     "chartist": "^0.11.0",
     "codemirror": "^5.36.0",
