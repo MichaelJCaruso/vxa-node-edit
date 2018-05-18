@@ -43,7 +43,7 @@ module.exports.httpServer = httpServer;
 const visionServer = require('./lib/vision_server');
 module.exports.visionServer = visionServer;
 module.exports.v = visionServer.v;
-app.use ('/cgi-bin/vquery.exe', visionServer.VQueryHandler ());
+app.use ('/cgi-bin/vquery.exe', visionServer.vquery);
 
 /*----------------*/
 const vdashServer = require('./lib/vdash_server');
