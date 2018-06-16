@@ -20,7 +20,7 @@ app.use (bodyParser.json());
 /*-----------------*/
 app.use (
     morgan (
-        'tiny', {
+        'combined', {
             stream: fs.createWriteStream(
                 path.join(__dirname, '/logs', 'access.log'), {flags: 'a'}
             )
