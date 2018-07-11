@@ -4,7 +4,7 @@
   "description": "Vision in a browser proof of concept",
   "dependencies": {
     "chartist": "^0.11.0",
-    "codemirror": "^5.37.0",
+    "codemirror": "^5.39.0",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "https": "^1.0.0",
@@ -16,6 +16,6 @@
     "socket.io": "^2.1.1",
     "vxanode": "github:MichaelJCaruso/vxa-node",
     "websocket-stream": "^5.1.2",
-    "ws": "^5.1.1"
+    "ws": "^5.2.1"
   }
 }
