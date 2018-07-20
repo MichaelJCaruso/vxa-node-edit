@@ -38,7 +38,9 @@ function showGraph (container,what,...args) {
     return mrGraph;
 }
 
-/*****************
+/****************************************************************
+
+################
 JS jsObject showGraph: "Line" with: (
   JS newObject
   set: "labels" toArrayFrom: 7 sequence .
@@ -46,9 +48,8 @@ JS jsObject showGraph: "Line" with: (
      (JS newArrayFrom: 100,120,180,300,-200,234,168) asList
   ). jsParam
 );
-*****************/
 
-/*****************
+################
 !data <- Security masterList
  groupedBy: [industry].
     select: [isntDefault].
@@ -68,9 +69,8 @@ JS jsObject
       set: "width" to: "10000px".
       set: "height" to: 400
   ) jsParam;
-*****************/
 
-/*****************
+################
 !data <- Security masterList
  groupedBy: [industry].
     select: [isntDefault].
@@ -94,9 +94,8 @@ JS jsObject
           set: "offset" to: 100 .
       ) jsParam
   ) jsParam;
-*****************/
 
-/*****************
+################
 !data <- Security masterList
  groupedBy: [industry].
     select: [isntDefault].
@@ -115,9 +114,8 @@ JS jsObject showGraph: "Bar" of: (
   set: "height" to: (data count * 40) asInteger .
   jsParam
 );
-*****************/
 
-/*****************
+################
 !data <- Security masterList
  groupedBy: [industry].
     select: [isntDefault].
@@ -132,4 +130,5 @@ JS jsObject showGraph: "Pie" of: (
   JS newObject
   set: "height" to: 1000
 ) jsParam;
-*****************/
+
+****************************************************************/
