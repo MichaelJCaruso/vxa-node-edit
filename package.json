@@ -10,12 +10,8 @@
     "https": "^1.0.0",
     "jquery": "^3.3.1",
     "jquery-resizable-dom": "^0.28.0",
-    "mime": "^2.3.1",
     "morgan": "^1.9.0",
-    "remote-lib": "^0.2.1",
     "socket.io": "^2.1.1",
-    "vxanode": "github:MichaelJCaruso/vxa-node",
-    "websocket-stream": "^5.1.2",
-    "ws": "^5.2.1"
+    "vxanode": "github:MichaelJCaruso/vxa-node"
   }
 }

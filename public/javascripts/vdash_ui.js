@@ -1,9 +1,4 @@
 /******************/
-
-// const { RemoteLibrary } = require('remote-lib');
-// const websocket = require('websocket-stream');
-
-/******************/
 var theUI;
 
 /******************/
