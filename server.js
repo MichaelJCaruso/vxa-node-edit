@@ -14,7 +14,7 @@ const app = express ();
 module.exports.app = app;
 app.use (cors());
 app.use (bodyParser.json());
-app.use (bodyParser.urlencoded());
+app.use (bodyParser.urlencoded({extended: true}));
 
 /*-----------------*/
 /*---- logging ----*/
