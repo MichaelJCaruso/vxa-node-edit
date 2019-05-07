@@ -1,17 +1,22 @@
 {
   "name": "vdash",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Vision in a browser proof of concept",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michaeljcaruso/vxa-node-edi.git"
+  },
+  "license": "MIT",
   "dependencies": {
-    "@vision-dbms/connect": "^1.0.2",
-    "chartist": "^0.11.0",
-    "codemirror": "^5.42.0",
-    "cors": "^2.8.5",
-    "express": "^4.16.4",
-    "https": "^1.0.0",
-    "jquery": "^3.3.1",
-    "jquery-resizable-dom": "^0.28.0",
-    "morgan": "^1.9.1",
-    "socket.io": "^2.1.1"
+    "@vision-dbms/connect": ">=1.0.2",
+    "chartist": ">=0.11.0",
+    "codemirror": ">=5.46.0",
+    "cors": ">=2.8.5",
+    "express": ">=4.16.4",
+    "https": ">=1.0.0",
+    "jquery": ">=3.4.1",
+    "jquery-ui": ">=1.12.1",
+    "morgan": ">=1.9.1",
+    "socket.io": ">=2.2.0"
   }
 }
