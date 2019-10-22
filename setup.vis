@@ -1,2 +1,2 @@
-"node.vis" asFileContents evaluate;
+"node_modules/\@vision-dbms/connect/resources/node.vis" asFileContents evaluate;
 "extendnode.vis" asFileContents evaluate
